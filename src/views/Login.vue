@@ -1,13 +1,36 @@
 <template>
-  <v-container fluid>
+  <v-container
+    fluid
+    class="background"
+  >
     <v-layout column>
       <v-flex xs12>
         <div class="container">
           <v-card
+            flat
+            tile
             class="container fluid text-md-center"
-            max-width="500px"
+            max-width="450px"
           >
-            <v-img src="https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125"></v-img>
+
+            <v-img
+              :src="`https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125`"
+              
+            >
+              <template v-slot:placeholder>
+                <v-layout
+                  fill-height
+                  align-center
+                  justify-center
+                  ma-0
+                >
+                  <v-progress-circular
+                    indeterminate
+                    color="black lighten-2"
+                  ></v-progress-circular>
+                </v-layout>
+              </template>
+            </v-img>
             <v-form class="container">
               <v-text-field
                 v-model="email"
@@ -24,18 +47,19 @@
               ></v-text-field>
               <v-btn
                 color="success"
-                
                 class="mt-3 mb-5"
                 outline
                 block
               >
                 Entrar
               </v-btn>
-              <span class="container fluid"><strong>Não tem conta?</strong> <v-btn
+              <span class="container fluid"><strong>Não tem conta?</strong>
+                <v-btn
                   outline
                   small
                   color="info"
-                >Cadastre-se</v-btn></span>
+                >Cadastre-se</v-btn>
+              </span>
             </v-form>
           </v-card>
         </div>
@@ -82,5 +106,15 @@ export default {
 <style scoped>
 form {
   margin-top: 10px;
+}
+.background {
+  background-image: linear-gradient(
+    to right top,
+    #061e41,
+    #002033,
+    #001e1f,
+    #081810,
+    #11120d
+  );
 }
 </style>
