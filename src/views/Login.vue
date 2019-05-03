@@ -13,10 +13,8 @@
             max-width="450px"
           >
 
-            <v-img
-              :src="`https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125`"
-              
-            >
+            <v-img class="imagem"
+            :src="`https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125`">
               <template v-slot:placeholder>
                 <v-layout
                   fill-height
@@ -32,18 +30,25 @@
               </template>
             </v-img>
             <v-form class="container">
+             
               <v-text-field
+              
                 v-model="email"
                 :rules="emailRules"
                 label="E-mail"
                 required
-              ></v-text-field>
+              ><i class="material-icons">
+                  account_circle
+                </i></v-text-field>
               <v-text-field
+              class="input-group--focused"
+                :type="show ? 'text' : 'password'" 
                 v-model="senha"
-                type="password"
                 :rules="senhaRules"
                 label="Senha"
                 required
+                :append-icon="show ? 'visibility' : 'visibility_off'"
+                @click:append="show = !show"
               ></v-text-field>
               <v-btn
                 color="success"
@@ -73,6 +78,7 @@
 export default {
   data: () => ({
     valid: true,
+    show: false,
 
     email: '',
     senha: '',
@@ -107,6 +113,10 @@ export default {
 form {
   margin-top: 10px;
 }
+.imagem {
+  margin-left: 30px;
+}
+
 .background {
   background-image: linear-gradient(
     to right top,
