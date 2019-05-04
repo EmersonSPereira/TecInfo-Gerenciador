@@ -63,6 +63,7 @@
                   outline
                   small
                   color="info"
+                  @click="$router.push('cadastro')"
                 >Cadastre-se</v-btn>
               </span>
             </v-form>
