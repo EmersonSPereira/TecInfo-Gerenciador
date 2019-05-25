@@ -5,8 +5,9 @@ import store from './store'
 
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import Vuelidate from 'vuelidate'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, Vuelidate)
 Vue.config.productionTip = false
 
 new Vue({
