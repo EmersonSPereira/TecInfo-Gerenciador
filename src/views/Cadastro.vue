@@ -200,6 +200,9 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, sameAs, email } from 'vuelidate/lib/validators'
 import firebase from 'firebase'
 
+import { db } from '../main';
+
+
 export default {
   mixins: [validationMixin],
 
@@ -257,6 +260,12 @@ export default {
 
   }),
 
+  firebase: {
+
+    usuarios: db
+    
+  },
+
   computed: {
 
 
@@ -310,8 +319,9 @@ export default {
 
       if (this.$v.usuario.$invalid) {
         firebase.auth().createUserWithEmailAndPassword(this.usuario.email, this.usuario.senha).then(
-          // eslint-disable-next-line no-unused-vars
-          (user) => {
+          
+          () => {
+            db.child(firebase.auth().currentUser.uid).set(this.usuario)
             alert('sua conta foi criada com sucesso, você sera redirecionado para aplicação')
             this.$router.replace('home')
           },

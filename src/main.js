@@ -9,6 +9,8 @@ import 'vuetify/dist/vuetify.min.css'
 import Vuelidate from 'vuelidate'
 import VueMask from 'v-mask'
 
+import './axios'
+
 
 Vue.use(Vuetify, Vuelidate,VueMask )
 Vue.config.productionTip = false
@@ -23,6 +25,8 @@ var config = {
   messagingSenderId: "72368438805"
 };
 firebase.initializeApp(config);
+let db = firebase.database().ref('usuarios')
+  export {db} 
 
 firebase.auth().onAuthStateChanged(() => {
   if(!app) {
