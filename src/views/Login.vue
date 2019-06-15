@@ -13,8 +13,10 @@
             max-width="450px"
           >
 
-            <v-img class="imagem"
-            :src="`https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125`">
+            <v-img
+              class="imagem"
+              :src="`https://firebasestorage.googleapis.com/v0/b/tecinfor-gerenciador.appspot.com/o/TecInfo%20Gerenciador.png?alt=media&token=a7a74d7a-ce45-49f9-a400-9e4bf1f00125`"
+            >
               <template v-slot:placeholder>
                 <v-layout
                   fill-height
@@ -30,9 +32,8 @@
               </template>
             </v-img>
             <v-form class="container">
-             
+
               <v-text-field
-              
                 v-model="email"
                 :rules="emailRules"
                 label="E-mail"
@@ -41,8 +42,8 @@
                   account_circle
                 </i></v-text-field>
               <v-text-field
-              class="input-group--focused"
-                :type="show ? 'text' : 'password'" 
+                class="input-group--focused"
+                :type="show ? 'text' : 'password'"
                 v-model="senha"
                 :rules="senhaRules"
                 label="Senha"
@@ -55,6 +56,7 @@
                 class="mt-3 mb-5"
                 outline
                 block
+                @click="login()"
               >
                 Entrar
               </v-btn>
@@ -71,15 +73,40 @@
         </div>
       </v-flex>
     </v-layout>
+    <v-progress-linear
+      :indeterminate="carregamento"
+      :active="carregamento"
+    ></v-progress-linear>
+    <v-snackbar
+      v-model="snackbar"
+      :top="true"
+      :right="true"
+      :timeout=6000
+      color="red"
+      
+    >
+      {{ text }}
+      <v-btn
+        color="black"
+        flat
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 
 </template>
 
 <script>
+import firebase from "firebase"
 export default {
   data: () => ({
     valid: true,
     show: false,
+    snackbar: false,
+    carregamento: false,
+    text: '',
 
     email: '',
     senha: '',
@@ -95,16 +122,40 @@ export default {
   }),
 
   methods: {
-    validate () {
-      if (this.$refs.form.validate()) {
-        this.snackbar = true
-      }
-    },
+    
     reset () {
       this.$refs.form.reset()
     },
     resetValidation () {
       this.$refs.form.resetValidation()
+    },
+    login () {
+
+
+      firebase.auth().signInWithEmailAndPassword(this.email, this.senha).then(
+        res => {
+          if (res) this.$router.push('home')
+        }).catch(err => {
+          if (err.code == "auth/invalid-email") {
+             this.text = "O email não pode ser vazio"
+            this.snackbar = true
+          }else if(err.code == "auth/wrong-password") {
+            this.text = "Senha Invalida"
+            this.snackbar = true
+          }
+
+
+        })
+
+
+
+
+
+
+    },
+    carregaHome () {
+
+
     }
   }
 }
