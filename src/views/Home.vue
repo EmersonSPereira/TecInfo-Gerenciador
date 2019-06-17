@@ -106,7 +106,7 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-textarea
-                    v-model="servico.descricaodefeito"
+                    v-model="servico.descricaoDefeito"
                     label="Descrição Defeito*"
                     type="text"
                     required
@@ -175,7 +175,7 @@
           <div>
             <h3 >Descrição Defeito:  
               </h3>
-            <div class="mt-4"> <span>{{ item.descricaodefeito }}</span> 
+            <div class="mt-4"> <span>{{ item.descricaoDefeito }}</span> 
                   </div>
           </div>
           
