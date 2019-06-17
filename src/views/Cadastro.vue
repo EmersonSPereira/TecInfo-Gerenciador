@@ -43,12 +43,18 @@
                     label="Telefone"
                     required
                     mask="(##) # ####-####"
+                    :error-messages="telefoneErrors"
+                    @input="$v.usuario.telefone.$touch()"
+                    @blur="$v.usuario.telefone.$touch()"
                   ></v-text-field>
                   <v-text-field
                     v-model="usuario.cpf"
                     label="CPF"
                     mask="###.###.###-##"
                     required
+                    :error-messages="cpfErrors"
+                    @input="$v.usuario.cpf.$touch()"
+                    @blur="$v.usuario.cpf.$touch()"
                   ></v-text-field>
                 </v-form>
               </v-flex>
@@ -107,11 +113,17 @@
                   <v-text-field
                     v-model="usuario.endereco.rua"
                     label="Rua"
+                    :error-messages="ruaErrors"
+                    @input="$v.usuario.usuario.rua.$touch()"
+                    @blur="$v.usuario.usuario.rua.$touch()"
                   ></v-text-field>
 
                   <v-text-field
                     v-model="usuario.endereco.cidade"
                     label="Cidade"
+                    :error-messages="cidadeErrors"
+                    @input="$v.usuario.usuario.cidade.$touch()"
+                    @blur="$v.usuario.usuario.cidade.$touch()"
                   ></v-text-field>
 
                 </v-flex>
@@ -122,11 +134,18 @@
                   <v-text-field
                     v-model="usuario.endereco.numero"
                     label="N°"
+                    :error-messages="numeroErrors"
+                    @input="$v.usuario.usuario.numero.$touch()"
+                    @blur="$v.usuario.usuario.numero.$touch()"
                   ></v-text-field>
 
                   <v-text-field
                     v-model="usuario.endereco.estado"
                     label="Estado"
+                    mask="AA"
+                    :error-messages="estadoErrors"
+                    @input="$v.usuario.usuario.estado.$touch()"
+                    @blur="$v.usuario.usuario.estado.$touch()"
                   ></v-text-field>
                 </v-flex>
                 <v-flex
@@ -136,11 +155,17 @@
                   <v-text-field
                     v-model="usuario.endereco.bairro"
                     label="Bairro"
+                    :error-messages="bairroErrors"
+                    @input="$v.usuario.usuario.bairro.$touch()"
+                    @blur="$v.usuario.usuario.bairro.$touch()"
                   ></v-text-field>
                   <v-text-field
                     v-model="usuario.endereco.cep"
                     label="CEP"
                     mask="#####-###"
+                    :error-messages="cepErrors"
+                    @input="$v.usuario.usuario.cep.$touch()"
+                    @blur="$v.usuario.usuario.cep.$touch()"
                   ></v-text-field>
                 </v-flex>
 
@@ -192,15 +217,35 @@
       </v-flex>
 
     </v-layout>
-
+<!-- Snack bar mostrando notificação -->
+<v-snackbar
+      v-model="snackbar"
+      right="true"
+      top= "true"
+      color="error"
+      vertical = "true"
+      timeout="4000"
+      
+    >
+      {{ text }}
+      <v-btn
+        color="black"
+        flat
+        @click="snackbar = false"
+      >
+        fechar
+      </v-btn>
+    </v-snackbar>
   </v-container>
+  
 </template>
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, sameAs, email } from 'vuelidate/lib/validators'
 import firebase from 'firebase'
 
-import { db } from '../main';
+import { db } from '../main'
+import Swal from 'sweetalert2'
 
 
 export default {
@@ -217,14 +262,14 @@ export default {
       nome: { required, maxLength: maxLength(60) },
       email: { required, email },
       senha: { required, minLength: minLength(8) },
-      telefone: { required, minLength: maxLength(11) },
-      cpf: { required, maxLength: maxLength(11) },
+      telefone: { required, minLength: minLength(11) },
+      cpf: { required, minLength: minLength(11) },
       endereco: {
         rua: { required, maxLength: maxLength(200) },
         numero: { required, maxLength: maxLength(10) },
         bairro: { required, maxLength: maxLength(40) },
         cidade: { required, maxLength: maxLength(40) },
-        Estado: { required, maxLength: maxLength(40) },
+        estado: { required, maxLength: maxLength(2) },
         cep: { required, maxLength: maxLength(8) },
 
       }
@@ -237,6 +282,8 @@ export default {
     valid: true,
     show: false,
     senhaConfirma: null,
+    snackbar:false,
+    text:'',
 
     usuario: {
       nome: '',
@@ -263,7 +310,7 @@ export default {
   firebase: {
 
     usuarios: db
-    
+
   },
 
   computed: {
@@ -299,7 +346,66 @@ export default {
         return errors      }
 
       return errors
-    }
+    },
+
+    telefoneErrors () {
+      const errors = []
+      if (!this.$v.usuario.telefone.$dirty) return errors
+      !this.$v.usuario.telefone.minLength && errors.push('Seu telefone parece ser muito pequeno')
+      !this.$v.usuario.telefone.required && errors.push('O telefone é obrigatória')
+      return errors
+    },
+
+    cpfErrors () {
+      const errors = []
+      if (!this.$v.usuario.cpf.$dirty) return errors
+      !this.$v.usuario.cpf.minLength && errors.push('Seu CPF parece ser muito pequeno')
+      !this.$v.usuario.cpf.required && errors.push('O CPF é obrigatória')
+      return errors
+    },
+
+    ruaErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.rua.$dirty) return errors
+      !this.$v.usuario.endereco.rua.required && errors.push('Rua é obrigatório')
+      return errors
+    },
+
+    numeroErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.numero.$dirty) return errors
+      !this.$v.usuario.endereco.numero.required && errors.push('Número é obrigatório')
+      return errors
+    },
+
+    bairroErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.bairro.$dirty) return errors
+      !this.$v.usuario.endereco.bairro.required && errors.push('Bairro é obrigatório')
+      return errors
+    },
+
+    cidadeErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.cidade.$dirty) return errors
+      !this.$v.usuario.endereco.cidade.required && errors.push('Cidade é obrigatório')
+      return errors
+    },
+
+    estadoErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.estado.$dirty) return errors
+      !this.$v.usuario.endereco.estado.required && errors.push('Estado é obrigatório')
+      return errors
+    },
+
+    cepErrors () {
+      const errors = []
+      if (!this.$v.usuario.endereco.cep.$dirty) return errors
+      !this.$v.usuario.endereco.cep.required && errors.push('CEP é obrigatório')
+      return errors
+    },
+
   },
 
   methods: {
@@ -317,20 +423,35 @@ export default {
 
     cadastrar () {
 
-      if (this.$v.usuario.$invalid) {
+      if (!this.$v.usuario.$invalid) {
         firebase.auth().createUserWithEmailAndPassword(this.usuario.email, this.usuario.senha).then(
-          
+
           () => {
             db.child(firebase.auth().currentUser.uid).set(this.usuario)
-            alert('sua conta foi criada com sucesso, você sera redirecionado para aplicação')
-            this.$router.replace('home')
-          },
-          function (err) {
-            alert('Oops.' + err.message)
+            Swal.fire({
+              title: 'Cadastrado com Sucesso?',
+              text: "Você será redirecionado para Aplicação",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.value) {
+                this.$router.replace('home')
+              }
+            })
 
-          }
-        )
-      }
+          },
+        ).catch(err => {
+           if(err.code == "auth/email-already-in-use"){
+             this.text = "Este email já está sendo usado, por favor tente outro."
+             this.snackbar = true
+             console.log("entrou aqui")
+           }
+
+          })
+      } else this.$v.usuario.$touch()
     }
   }
 }

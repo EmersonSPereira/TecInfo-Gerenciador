@@ -8,11 +8,12 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import Vuelidate from 'vuelidate'
 import VueMask from 'v-mask'
+import VueSweetalert2 from 'vue-sweetalert2'
 
 import './axios'
 
 
-Vue.use(Vuetify, Vuelidate,VueMask )
+Vue.use(Vuetify, Vuelidate,VueMask,VueSweetalert2 )
 Vue.config.productionTip = false
 
 let app = ''
